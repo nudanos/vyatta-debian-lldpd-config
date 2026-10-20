@@ -17,8 +17,6 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-sysconfdir=/opt/vyatta/etc
-
 case "$1" in
     configure)
 		# init of daemon is controlled by Vyatta configuration
@@ -28,11 +26,9 @@ case "$1" in
 		adduser --system --disabled-password --disabled-login --home /var/run/lldpd \
 				--no-create-home --quiet --force-badname --group _lldpd
 
-		for i in /usr/sbin/lldpctl; do
-		if ! dpkg-statoverride --list $i > /dev/null 2>&1; then
-			dpkg-statoverride --update --add _lldpd adm 4750 $i
+		if ! dpkg-statoverride --list /usr/sbin/lldpctl > /dev/null 2>&1; then
+			dpkg-statoverride --update --add _lldpd adm 4750 /usr/sbin/lldpctl
 		fi
-		done
 
 		chown root:root /usr/sbin/lldpctl
 
